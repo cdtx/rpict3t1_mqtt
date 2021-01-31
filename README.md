@@ -1,5 +1,8 @@
 Deploying the RPICT3T1 shield and puch values to a MQTT broker
 
+RPICT3T1 is a shield for raspberry pi that uses current transformers to measure the electrical power carrier by a wire.
+Its sold on lechacal.com
+
 ## Environment installation on RPI
 
 Install pip for python3
@@ -45,6 +48,10 @@ Note : option -a is the shields auto reboot
 
 
 # Push to MQTT
+
+## MQTT broker
+I have choosed to host the MQTT broker on the same machine, so it's available at 127.0.0.1 (mosquitto)
+
 The module mqtt.py does the job
 To run periodically (every minute in the example below) using cron, launch cron editor
 ```bash

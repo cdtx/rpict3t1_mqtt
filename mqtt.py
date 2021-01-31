@@ -17,9 +17,10 @@ def run():
         line_values = line.split()
 
         if len(line_values) >= 4:
-            c_values = list(map(float, line_values[1:4]))
-            for i,v in enumerate(c_values):
-                mqtt_client.publish('/current/%d' % (i+1), v)   
+            v1, v2, v3 = map(float, line_values[1:4])
+            mqtt_client.publish('/current/1', v1)   
+            mqtt_client.publish('/current/2', v2)   
+            mqtt_client.publish('/current/3', v3)   
     
     except:
         traceback.print_exc()
