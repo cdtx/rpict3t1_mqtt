@@ -21,17 +21,18 @@ def run():
             '/current/nodeid',
             '/current/1', 
             '/current/2', 
-            '/current/3', 
+            '',
+            # '/current/3', 
         )
 
-        if len(line_values) >= 4:
-            values = map(float, line_values)
+        # Convert all read values to float
+        values = map(float, line_values)
 
-            # Shape a dictionary of all the values we want to send in one shot using function publish.multiple.
-            mqtt_message = [[k, v] for k,v in zip(topics, values)]
+        # Shape a nested list of all the [topic, value] we want to send in one shot using function publish.multiple.
+        mqtt_message = [[topic, value] for topic,value in zip(topics, values) if topic]
 
-            # Send the message
-            publish.multiple(mqtt_message)
+        # Send the message
+        publish.multiple(mqtt_message)
     
     except:
         traceback.print_exc()
