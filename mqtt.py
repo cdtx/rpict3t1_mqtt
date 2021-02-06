@@ -3,6 +3,7 @@
 import traceback
 import serial
 import paho.mqtt.client as paho
+import paho.mqtt.publish as publish
 
 MQTT_BROKER = '127.0.0.1'
 MQTT_PORT = 1883
@@ -16,11 +17,21 @@ def run():
         line = ser.readline().decode('utf-8').strip()
         line_values = line.split()
 
+        topics = (
+            '/current/nodeid',
+            '/current/1', 
+            '/current/2', 
+            '/current/3', 
+        )
+
         if len(line_values) >= 4:
-            v1, v2, v3 = map(float, line_values[1:4])
-            mqtt_client.publish('/current/1', v1)   
-            mqtt_client.publish('/current/2', v2)   
-            mqtt_client.publish('/current/3', v3)   
+            values = map(float, line_values)
+
+            # Shape a dictionary of all the values we want to send in one shot using function publish.multiple.
+            mqtt_message = [[k, v] for k,v in zip(topics, values)]
+
+            # Send the message
+            publish.multiple(mqtt_message)
     
     except:
         traceback.print_exc()
