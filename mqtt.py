@@ -11,9 +11,6 @@ MQTT_PORT = 1883
 def run():
     try:
         ser = serial.Serial('/dev/ttyAMA0', 38400)
-        mqtt_client= paho.Client("current")
-        mqtt_client.connect(MQTT_BROKER, MQTT_PORT)
-
         line = ser.readline().decode('utf-8').strip()
         line_values = line.split()
 
@@ -32,7 +29,7 @@ def run():
         mqtt_message = [[topic, value] for topic,value in zip(topics, values) if topic]
 
         # Send the message
-        publish.multiple(mqtt_message)
+        publish.multiple(hostname=MQTT_BROKER, port=MQTT_PORT, mqtt_message)
     
     except:
         traceback.print_exc()
