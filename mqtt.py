@@ -8,6 +8,7 @@ import paho.mqtt.publish as publish
 
 MQTT_BROKER = '127.0.0.1'
 MQTT_PORT = 1883
+MQTT_TOPIC = 'domotics/in'
 
 def run():
     try:
@@ -35,9 +36,8 @@ def run():
 
         # Send the message
         # remove None messages
-        mqtt_messages = [mess for mess in mqtt_messages if mess]
-        import pdb; pdb.set_trace()
-        publish.multiple(mqtt_messages, hostname=MQTT_BROKER, port=MQTT_PORT)
+        json_messages = [[MQTT_TOPIC, json.dumps(mess)] for mess in mqtt_messages if mess]
+        publish.multiple(json_messages, hostname=MQTT_BROKER, port=MQTT_PORT)
     
     except:
         traceback.print_exc()
