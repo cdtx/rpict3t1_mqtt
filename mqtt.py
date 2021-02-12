@@ -12,10 +12,9 @@ MQTT_TOPIC = 'domotics/in'
 
 def run():
     try:
-        # ser = serial.Serial('/dev/ttyAMA0', 38400)
-        # line = ser.readline().decode('utf-8').strip()
-        # line_values = line.split()
-        line_values = "1 2 3 4 5".split()
+        ser = serial.Serial('/dev/ttyAMA0', 38400)
+        line = ser.readline().decode('utf-8').strip()
+        line_values = line.split()
 
         # All domoticz options : https://www.domoticz.com/wiki/Domoticz_API/JSON_URL%27s
         # Prepare the messages to send
