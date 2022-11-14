@@ -1,0 +1,2 @@
+paho-mqtt==1.5.1
+git+https://github.com/cdtx/pymqtt_hass@master#egg=pymqtt_hass

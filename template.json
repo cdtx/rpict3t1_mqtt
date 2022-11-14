@@ -1,0 +1,34 @@
+{
+    "device": {
+        "identifiers":"{device_id}",
+        "manufacturer":"cdtx",
+        "model":"Three-phases powermeter"
+    },
+    "entities": [
+        {
+            "unique_id":"{entity_id}",
+            "component":"sensor",
+            "name":"Total power",
+            "state_topic":"{device_topic}/power/total",
+            "unit_of_measurement":"W"
+        },
+        {
+            "unique_id":"{entity_id}",
+            "component":"sensor",
+            "state_topic":"{device_topic}/power/phase_1",
+            "unit_of_measurement":"W"
+        },
+        {
+            "unique_id":"{entity_id}",
+            "component":"sensor",
+            "state_topic":"{device_topic}/power/phase_2",
+            "unit_of_measurement":"W"
+        },
+        {
+            "unique_id":"{entity_id}",
+            "component":"sensor",
+            "state_topic":"{device_topic}/power/phase_3",
+            "unit_of_measurement":"W"
+        }
+    ]
+}

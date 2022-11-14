@@ -1,7 +1,12 @@
-Deploying the RPICT3T1 shield and puch values to a MQTT broker
+# Power sensor based on RPICT3T1 for home-assistant
 
 RPICT3T1 is a shield for raspberry pi that uses current transformers to measure the electrical power carrier by a wire.
 Its sold on lechacal.com
+
+## The product
+- Raspberry pi 2
+- RPICT3T1\_v2.4 (bought on lechacal.com)
+- 3 current transformers (sct-013-000)
 
 ## Environment installation on RPI
 
@@ -10,55 +15,34 @@ Install pip for python3
 sudo apt-get install python3-pip
 ```
 
-Install paho-mqtt
-```bash
-sudo pip3 install paho-mqtt
-```
-
-Install serial (I have been unable to make it work when installing it using pip)
+Install serial (I did not manage to make it work when installing it using pip)
 ``` bash
 sudo apt-get install python3-serial
 ```
 
-# The product
-- RPICT3T1 (bought on lechacal.com)
-- 3 current transformers (sct-013-000)
-
-## Read values
-On a raspberry pi with serial line properly activated
+Clone the current project
 ```bash
-stty -F /dev/ttyAMA0 raw speed 38400
-cat /dev/ttyAMA0
+git clone https://github.com/cdtx/rpict3t1_mqtt
 ```
 
-## Configure the shield
-The config is in the file rpict.conf
+# Configuration
 
-lechacal.com provides a python tool to interact with the shield's configuration :
-```bash
-wget lechacal.com/RPICT/tools/lcl-rpict-config.py.zip
-unzip lcl-rpict-config.py.zip
-```
+The main script expects to read a file named config.ini in the same folder, containing the following keys :
 
-To push a configuration :
-```bash
-./lcl-rpict-config.py -a -w rpict.conf
-```
-Note : option -a is the shields auto reboot
+``` ini
+[MQTT]
+# url or ip to the mqtt broker
+HOST = 
+# port to connect to the mqtt broker
+PORT =
+# mqtt broker username/password
+USERNAME =
+PASSWORD =
+``` 
 
 
-# Push to MQTT
+## Links
 
-## MQTT broker
-I have choosed to host the MQTT broker on the same machine, so it's available at 127.0.0.1 (mosquitto)
-
-The module mqtt.py does the job
-To run periodically (every minute in the example below) using cron, launch cron editor
-```bash
-crontab -e
-```
-and add line : 
-```
-* * * * * /home/pi/.../mqtt.py
-```
+- [Shield home page](http://lechacal.com/wiki/index.php?title=RPICT3T1)
+- [Shield configuration](http://lechacal.com/wiki/index.php?title=Attiny_Over_Serial_Configuration_A2)
 
