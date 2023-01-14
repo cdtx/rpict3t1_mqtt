@@ -8,7 +8,6 @@
         {
             "unique_id":"{entity_id}",
             "component":"sensor",
-            "name":"Total power",
             "state_topic":"{device_topic}/power/total",
             "unit_of_measurement":"W"
         },
@@ -29,6 +28,11 @@
             "component":"sensor",
             "state_topic":"{device_topic}/power/phase_3",
             "unit_of_measurement":"W"
+        },
+        {
+            "name":"boost",
+            "retain":true,
+            "unique_id":"{entity_id}"
         }
     ]
 }
