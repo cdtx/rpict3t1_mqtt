@@ -16,21 +16,11 @@ current_folder = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = 'config.ini'
 PYMQTT_HASS_CONFIG_FILE = 'pymqtt_hass_config.json'
 
-# dict protected with an asyncio Semaphore
-dynamic_config_semaphore = asyncio.Semaphore(1)
-dynamic_config = {
-    'boost':False,
-}
-
-
-def ask_exit(signame, loop):
-    print("got signal %s: exit" % signame)
-    loop.stop()
-
 class AsyncPowerMeter():
     def __init__(self, loop):
         self.loop = loop
         self.dynamic_config_changed_event = asyncio.Event()
+        self.exit_event = asyncio.Event()
 
     def get_config(self):
         ret = {}
@@ -61,6 +51,10 @@ class AsyncPowerMeter():
                     self.dynamic_config_changed_event.set()
                 else:
                     self.dynamic_config_changed_event.clear()
+
+    def on_ask_exit(self, signame):
+        print("got signal %s: exit" % signame)
+        self.exit_event.set()
 
     def mqtt_init(self):
         # Initialize MQTT client
@@ -101,7 +95,8 @@ class AsyncPowerMeter():
         for signame in {'SIGINT', 'SIGTERM'}:
             self.loop.add_signal_handler(
                 getattr(signal, signame),
-                functools.partial(ask_exit, signame, self.loop))
+                functools.partial(self.on_ask_exit, signame)
+            )
 
     def serial_read(self):
         # Read values from the serial line
@@ -149,11 +144,13 @@ class AsyncPowerMeter():
             values = self.serial_read()
             self.mqtt_publish(values)
 
-            try:
-                await asyncio.wait_for(self.dynamic_config_changed_event.wait(), timeout=60)
-            except asyncio.TimeoutError:
-                # Expected behaviour when not in boost mode
-                pass
+            await asyncio.wait([
+                self.exit_event.wait(),
+                self.dynamic_config_changed_event.wait(),
+            ], return_when=asyncio.FIRST_COMPLETED, timeout=60)
+
+            if self.exit_event.is_set():
+                break
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
