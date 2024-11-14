@@ -76,7 +76,7 @@ class MQTTDevice:
                 line_values = line.split()
 
                 # Convert all read values to float
-                values = list(map(float, line_values))
+                values = list(map(lambda x:int(float(x)), line_values))
 
                 # Drop the node id and temperature if any
                 values = values[1:4]
