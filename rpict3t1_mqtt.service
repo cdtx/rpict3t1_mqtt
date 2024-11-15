@@ -1,0 +1,14 @@
+[Unit]
+Description = MQTT Powermeter for Home-Assistant
+ 
+[Service]
+Type = simple
+ExecStart = python3 /home/cdtx/rpict3t1_mqtt/feu.py
+User = cdtx
+Group = cdtx
+Restart = on-failure
+RestartSec = 5
+TimeoutStartSec = infinity
+ 
+[Install]
+WantedBy = multi-user.target
